@@ -1,11 +1,10 @@
 package gli
 
 import (
+	"errors"
+	"fmt"
 	"image"
 	"runtime"
-
-	"fmt"
-
 	"strconv"
 
 	"github.com/go-gl/gl/v2.1/gl"
@@ -22,7 +21,7 @@ func Viewport(v image.Rectangle) {
 func Version() string {
 	ptr := gl.GetString(gl.VERSION)
 	if ptr == nil {
-		panic(fmt.Errorf("GetString(VERSION) returned nil"))
+		panic(errors.New("GetString(VERSION) returned nil"))
 	}
 	return gl.GoStr(ptr)
 }
@@ -30,7 +29,7 @@ func Version() string {
 func ShaderVersion() string {
 	ptr := gl.GetString(gl.SHADING_LANGUAGE_VERSION)
 	if ptr == nil {
-		panic(fmt.Errorf("GetString(SHADING_LANGUAGE_VERSION) returned nil"))
+		panic(errors.New("GetString(SHADING_LANGUAGE_VERSION) returned nil"))
 	}
 	return gl.GoStr(ptr)
 }

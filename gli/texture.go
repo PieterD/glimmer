@@ -1,6 +1,7 @@
 package gli
 
 import (
+	"errors"
 	"fmt"
 	"image"
 	"image/draw"
@@ -51,7 +52,7 @@ func (texture *Texture) Delete() {
 
 func NewTexture(img *image.RGBA, opts ...TextureOption) (*Texture, error) {
 	if img.Stride != img.Rect.Size().X*4 {
-		return nil, fmt.Errorf("unsupported stride in texture image")
+		return nil, errors.New("unsupported stride in texture image")
 	}
 	opt := textureOption{
 		filterMin: LINEAR,

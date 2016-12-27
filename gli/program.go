@@ -1,6 +1,7 @@
 package gli
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/PieterD/glimmer/convc"
@@ -42,7 +43,7 @@ func NewProgram(vertexSource, fragmentSource string) (*Program, error) {
 	if id == 0 {
 		gl.DeleteShader(vertexId)
 		gl.DeleteShader(fragmentId)
-		return nil, fmt.Errorf("Unable to allocate program")
+		return nil, errors.New("Unable to allocate program")
 	}
 	gl.AttachShader(id, vertexId)
 	gl.AttachShader(id, fragmentId)
@@ -72,7 +73,7 @@ func NewProgram(vertexSource, fragmentSource string) (*Program, error) {
 func newShader(source string, shaderType uint32) (uint32, error) {
 	id := gl.CreateShader(shaderType)
 	if id == 0 {
-		return 0, fmt.Errorf("Unable to allocate shader")
+		return 0, errors.New("Unable to allocate shader")
 	}
 	ptr, free := convc.StringToC(source)
 	defer free()

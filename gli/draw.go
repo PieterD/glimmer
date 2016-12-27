@@ -1,7 +1,8 @@
 package gli
 
 import (
-	"fmt"
+	"errors"
+
 	"github.com/go-gl/gl/v2.1/gl"
 )
 
@@ -39,7 +40,7 @@ func NewDraw(mode DrawMode, program *Program, vao *VAO, opts ...DrawOption) (*Dr
 
 	if opt.index != nil {
 		if opt.index.bindpoint != gl.ELEMENT_ARRAY_BUFFER {
-			return nil, fmt.Errorf("Wrong bindpoint for index buffer: Element buffers must be created with BufferElementArray option")
+			return nil, errors.New("Wrong bindpoint for index buffer: Element buffers must be created with BufferElementArray option")
 		}
 	}
 

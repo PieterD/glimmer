@@ -1,6 +1,7 @@
 package gli
 
 import (
+	"errors"
 	"fmt"
 	"unsafe"
 
@@ -71,7 +72,7 @@ func NewBuffer(idata interface{}, opts ...BufferOption) (*Buffer, error) {
 	case int(DYNAMIC) | int(COPY):
 		usage = gl.DYNAMIC_COPY
 	default:
-		panic(fmt.Errorf("Could not resolve buffer usage from options"))
+		panic(errors.New("Could not resolve buffer usage from options"))
 	}
 	data, err := resolveData(idata)
 	if err != nil {
@@ -142,7 +143,7 @@ func resolveData(idata interface{}) (iData, error) {
 		d.length = len(data)
 		d.ptr = gl.Ptr(data)
 	default:
-		return iData{}, fmt.Errorf("Unusable data type for buffer")
+		return iData{}, errors.New("Unusable data type for buffer")
 	}
 	return d, nil
 }
