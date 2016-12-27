@@ -6,10 +6,16 @@ import (
 )
 
 type Draw struct {
-	mode    DrawMode
-	program *Program
-	vao     *VAO
-	index   *Buffer
+	mode     DrawMode
+	program  *Program
+	vao      *VAO
+	index    *Buffer
+	textures []drawTex
+}
+
+type drawTex struct {
+	texture *Texture
+	unit    int
 }
 
 type DrawMode uint32
@@ -38,16 +44,20 @@ func NewDraw(mode DrawMode, program *Program, vao *VAO, opts ...DrawOption) (*Dr
 	}
 
 	return &Draw{
-		mode:    mode,
-		program: program,
-		vao:     vao,
-		index:   opt.index,
+		mode:     mode,
+		program:  program,
+		vao:      vao,
+		index:    opt.index,
+		textures: opt.textures,
 	}, nil
 }
 
 func (draw *Draw) Draw(offset, count int) {
 	draw.program.Use()
 	draw.vao.Use()
+	for _, t := range draw.textures {
+		t.texture.Use(t.unit)
+	}
 	if draw.index == nil {
 		gl.DrawArrays(uint32(draw.mode), int32(offset), int32(count))
 	} else {
@@ -59,11 +69,21 @@ func (draw *Draw) Draw(offset, count int) {
 type DrawOption func(*drawOption)
 
 type drawOption struct {
-	index *Buffer
+	index    *Buffer
+	textures []drawTex
 }
 
 func DrawIndex(index *Buffer) DrawOption {
 	return func(opt *drawOption) {
 		opt.index = index
+	}
+}
+
+func DrawTexture(texture *Texture, unit int) DrawOption {
+	return func(opt *drawOption) {
+		opt.textures = append(opt.textures, drawTex{
+			texture: texture,
+			unit:    unit,
+		})
 	}
 }
