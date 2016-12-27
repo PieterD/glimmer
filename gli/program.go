@@ -190,7 +190,6 @@ func (uniform Uniform) Location() int32 {
 }
 
 func (uniform Uniform) SetSampler(data ...int32) {
-	fmt.Printf("set %#v\n", uniform)
 	switch uniform.typ {
 	case gl.SAMPLER, gl.SAMPLER_1D, gl.SAMPLER_2D, gl.SAMPLER_3D:
 		gl.ProgramUniform1iv(uniform.program.id, uniform.Location(), uniform.siz, &data[0])
@@ -200,7 +199,6 @@ func (uniform Uniform) SetSampler(data ...int32) {
 }
 
 func (uniform Uniform) SetInt(data ...int32) {
-	fmt.Printf("set %#v\n", uniform)
 	switch uniform.typ {
 	case gl.INT:
 		gl.ProgramUniform1iv(uniform.program.id, uniform.Location(), uniform.siz, &data[0])
@@ -216,7 +214,6 @@ func (uniform Uniform) SetInt(data ...int32) {
 }
 
 func (uniform Uniform) SetFloat(data ...float32) {
-	fmt.Printf("set %#v\n", uniform)
 	switch uniform.typ {
 	case gl.FLOAT:
 		gl.ProgramUniform1fv(uniform.program.id, uniform.Location(), uniform.siz, &data[0])
