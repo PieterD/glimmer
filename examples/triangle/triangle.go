@@ -1,9 +1,9 @@
 package main
 
 import (
-	. "github.com/PieterD/glimmer/examples/shared"
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
+	. "github.com/PieterD/pan"
 )
 
 var vSource = `
