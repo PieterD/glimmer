@@ -8,8 +8,8 @@ import (
 )
 
 type Window struct {
-	poll bool
 	w    *glfw.Window
+	poll bool
 }
 
 func New(opts ...WindowOption) (*Window, error) {

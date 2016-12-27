@@ -4,7 +4,6 @@ import (
 	. "github.com/PieterD/glimmer/examples/shared"
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
-	"github.com/go-gl/gl/v2.1/gl"
 )
 
 var vSource = `
@@ -66,13 +65,14 @@ func main() {
 	vao.Enable(3, vbo, program.Attrib("color"),
 		gli.VAOOffset(6))
 
+	draw, err := gli.NewDraw(gli.TRIANGLES, program, vao)
+	Panic(err)
+
 	gli.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	for !window.ShouldClose() {
 		gli.Clear()
-		program.Use()
-		vao.Use()
-		gl.DrawArrays(gl.TRIANGLES,0, 3)
+		draw.Draw(0, 3)
 		window.Swap()
 	}
 }
