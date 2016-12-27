@@ -68,10 +68,11 @@ func main() {
 	draw, err := gli.NewDraw(gli.TRIANGLES, program, vao)
 	Panic(err)
 
-	gli.ClearColor(0.0, 0.0, 0.0, 1.0)
+	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
+	Panic(err)
 
 	for !window.ShouldClose() {
-		gli.Clear()
+		clear.Clear()
 		draw.Draw(0, 3)
 		window.Swap()
 	}
