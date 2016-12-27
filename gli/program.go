@@ -3,7 +3,7 @@ package gli
 import (
 	"fmt"
 
-	"github.com/PieterD/glimmer/gli/convc"
+	"github.com/PieterD/glimmer/convc"
 	"github.com/go-gl/gl/v2.1/gl"
 )
 
