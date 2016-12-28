@@ -1,14 +1,13 @@
 package main
 
 import (
+	"math"
 	"time"
 
+	"github.com/PieterD/glimmer/caps"
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
 	. "github.com/PieterD/pan"
-	"github.com/PieterD/glimmer/gli/caps"
-	"math"
-	"fmt"
 )
 
 var vSource = `
@@ -102,7 +101,7 @@ func main() {
 
 	for !window.ShouldClose() {
 		// Pulse the square by setting a time-dependent uniform
-		scale := math.Sin(time.Since(start).Seconds()) / 2.0 + 0.5
+		scale := math.Sin(time.Since(start).Seconds())/2.0 + 0.5
 		alpha.SetFloat(float32(scale))
 
 		clear.Clear()

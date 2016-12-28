@@ -2,7 +2,7 @@ package caps
 
 import "github.com/go-gl/gl/v2.1/gl"
 
-type BlendCaps struct {}
+type BlendCaps struct{}
 
 var Blend = BlendCaps{}
 
