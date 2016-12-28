@@ -66,7 +66,6 @@ func NewTexture(img *image.RGBA, opts ...TextureOption) (*Texture, error) {
 
 	var id uint32
 	gl.GenTextures(1, &id)
-	gl.ActiveTexture(gl.TEXTURE0)
 	gl.BindTexture(gl.TEXTURE_2D, id)
 	defer gl.BindTexture(gl.TEXTURE_2D, 0)
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, int32(opt.filterMin))
