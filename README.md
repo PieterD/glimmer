@@ -5,6 +5,20 @@
 
 Basic opengl utilities, mostly for personal use
 
+## Packages
+
+### [win](win)
+
+The win package deals with GLFW window creation and maintenance.
+
+### [gli](gli)
+
+The gli package contains most of the OpenGL Objects; buffers, VAOs, shaders, etc.
+
+### [caps](caps)
+
+The caps package concerns itself with Capabilities (see [glEnable](https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml)), since most of these are quite seperate from OpenGL Objects. 
+
 ## Examples, in order of complexity
 
 ### [Triangle](examples/triangle)
@@ -17,4 +31,5 @@ Basic opengl utilities, mostly for personal use
 - Polling events
 - Element buffer and indexed rendering
 - Uniforms
+- Capabilities (blending)
 

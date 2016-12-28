@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/PieterD/glimmer/convc"
+	"github.com/PieterD/glimmer/internal/convc"
 	"github.com/go-gl/gl/v2.1/gl"
 )
 

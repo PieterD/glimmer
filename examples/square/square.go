@@ -94,6 +94,7 @@ func main() {
 	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
 	Panic(err)
 
+	// Enable blending and set blend function
 	caps.Blend.Enable()
 	caps.Blend.Func(caps.BF_SRC_ALPHA, caps.BF_ONE_MINUS_SRC_ALPHA)
 
