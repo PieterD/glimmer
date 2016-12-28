@@ -6,6 +6,9 @@ import (
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
 	. "github.com/PieterD/pan"
+	"github.com/PieterD/glimmer/gli/caps"
+	"math"
+	"fmt"
 )
 
 var vSource = `
@@ -92,12 +95,15 @@ func main() {
 	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
 	Panic(err)
 
-	gli.Capabilities.BlendEnable()
-	gli.Capabilities.BlendFunc(gli.BF_SRC_ALPHA, gli.BF_ONE_MINUS_SRC_ALPHA)
+	caps.Blend.Enable()
+	caps.Blend.Func(caps.BF_SRC_ALPHA, caps.BF_ONE_MINUS_SRC_ALPHA)
+
+	start := time.Now()
 
 	for !window.ShouldClose() {
-		// Set the uniform
-		alpha.SetFloat(float32(time.Now().Nanosecond()) / 1000000000)
+		// Pulse the square by setting a time-dependent uniform
+		scale := math.Sin(time.Since(start).Seconds()) / 2.0 + 0.5
+		alpha.SetFloat(float32(scale))
 
 		clear.Clear()
 		draw.Draw(0, 6)

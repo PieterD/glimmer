@@ -1,21 +1,20 @@
-package gli
+package caps
 
 import "github.com/go-gl/gl/v2.1/gl"
 
-type capabilities struct {
-}
+type BlendCaps struct {}
 
-var Capabilities = capabilities{}
+var Blend = BlendCaps{}
 
-func (_ capabilities) BlendFunc(sourceFactor, destinationFactor BlendFactor) {
+func (_ BlendCaps) Func(sourceFactor, destinationFactor BlendFactor) {
 	gl.BlendFunc(uint32(sourceFactor), uint32(destinationFactor))
 }
 
-func (_ capabilities) BlendEnable() {
+func (_ BlendCaps) Enable() {
 	gl.Enable(gl.BLEND)
 }
 
-func (_ capabilities) BlendDisable() {
+func (_ BlendCaps) Disable() {
 	gl.Disable(gl.BLEND)
 }
 
