@@ -18,7 +18,7 @@ varying vec4 theColor;
 
 void main() {
 	gl_Position = vec4(position, 0.0, 1.0);
-	theColor = vec4(color * alpha, 1.0);
+	theColor = vec4(color, alpha);
 }
 `
 
@@ -91,6 +91,9 @@ func main() {
 
 	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
 	Panic(err)
+
+	gli.Capabilities.BlendEnable()
+	gli.Capabilities.BlendFunc(gli.BF_SRC_ALPHA, gli.BF_ONE_MINUS_SRC_ALPHA)
 
 	for !window.ShouldClose() {
 		// Set the uniform
