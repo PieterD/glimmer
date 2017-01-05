@@ -2,7 +2,7 @@ package caps
 
 import "github.com/go-gl/gl/v2.1/gl"
 
-type CullCaps struct {}
+type CullCaps struct{}
 
 var Cull = CullCaps{}
 

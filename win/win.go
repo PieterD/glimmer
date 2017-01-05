@@ -9,9 +9,9 @@ import (
 )
 
 type Window struct {
-	w    *glfw.Window
+	w     *glfw.Window
 	close int32
-	poll bool
+	poll  bool
 }
 
 func New(opts ...WindowOption) (*Window, error) {
