@@ -224,6 +224,12 @@ func (uniform Uniform) SetFloat(data ...float32) {
 		gl.ProgramUniform3fv(uniform.program.id, uniform.Location(), uniform.siz, &data[0])
 	case gl.FLOAT_VEC4:
 		gl.ProgramUniform4fv(uniform.program.id, uniform.Location(), uniform.siz, &data[0])
+	case gl.FLOAT_MAT2:
+		gl.ProgramUniformMatrix2fv(uniform.program.id, uniform.location, uniform.siz, false, &data[0])
+	case gl.FLOAT_MAT3:
+		gl.ProgramUniformMatrix3fv(uniform.program.id, uniform.location, uniform.siz, false, &data[0])
+	case gl.FLOAT_MAT4:
+		gl.ProgramUniformMatrix4fv(uniform.program.id, uniform.location, uniform.siz, false, &data[0])
 	default:
 		panic(fmt.Errorf("Unusable gl type '%04X'", uniform.typ))
 	}

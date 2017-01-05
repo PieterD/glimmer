@@ -6,38 +6,6 @@ import (
 	. "github.com/PieterD/pan"
 )
 
-var vSource = `
-#version 110
-
-attribute vec2 position;
-attribute vec3 color;
-varying vec4 theColor;
-
-void main() {
-	gl_Position = vec4(position, 0.0, 1.0);
-	theColor = vec4(color, 1.0);
-}
-`
-
-var fSource = `
-#version 110
-
-varying vec4 theColor;
-
-void main() {
-	gl_FragColor = theColor;
-}
-`
-
-var vertexData = []float32{
-	0.75, 0.75,
-	0.75, -0.75,
-	-0.75, -0.75,
-	1.0, 0.0, 0.0,
-	0.0, 1.0, 0.0,
-	0.0, 0.0, 1.0,
-}
-
 func main() {
 	// Create window
 	window, err := win.New(
@@ -79,4 +47,36 @@ func main() {
 		draw.Draw(0, 3)
 		window.Swap()
 	}
+}
+
+var vSource = `
+#version 110
+
+attribute vec2 position;
+attribute vec3 color;
+varying vec4 theColor;
+
+void main() {
+	gl_Position = vec4(position, 0.0, 1.0);
+	theColor = vec4(color, 1.0);
+}
+`
+
+var fSource = `
+#version 110
+
+varying vec4 theColor;
+
+void main() {
+	gl_FragColor = theColor;
+}
+`
+
+var vertexData = []float32{
+	0.75, 0.75,
+	0.75, -0.75,
+	-0.75, -0.75,
+	1.0, 0.0, 0.0,
+	0.0, 1.0, 0.0,
+	0.0, 0.0, 1.0,
 }

@@ -5,10 +5,12 @@ import (
 
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"sync/atomic"
 )
 
 type Window struct {
 	w    *glfw.Window
+	close int32
 	poll bool
 }
 
@@ -61,7 +63,14 @@ func (window *Window) Destroy() {
 	glfw.Terminate()
 }
 
+func (window *Window) Close() {
+	atomic.StoreInt32(&window.close, 1)
+}
+
 func (window *Window) ShouldClose() bool {
+	if atomic.LoadInt32(&window.close) == 1 {
+		return true
+	}
 	return window.w.ShouldClose()
 }
 

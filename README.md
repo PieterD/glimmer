@@ -33,3 +33,13 @@ The caps package concerns itself with Capabilities (see [glEnable](https://www.o
 - Uniforms
 - Capabilities (blending)
 
+### [Texture](examples/texture)
+- Textures
+
+### [Perspective](examples/perspective)
+- Perspective matrix
+- Depth buffer
+- Face culling
+- Keyboard interactivity
+- Rudimentary camera panning
+- Close on escape
