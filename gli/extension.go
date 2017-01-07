@@ -11,7 +11,12 @@ type Extensions struct {
 	m map[string]struct{}
 }
 
-func GetExtensions() (*Extensions, error) {
+var extensions *Extensions
+
+func GetExtensions() *Extensions {
+	if extensions != nil {
+		return extensions
+	}
 	ptr := gl.GetString(gl.EXTENSIONS)
 	if ptr == nil {
 		panic(errors.New("GetString(EXTENSIONS) returned nil"))
@@ -22,9 +27,10 @@ func GetExtensions() (*Extensions, error) {
 	for _, extension := range extensionSlice {
 		extensionMap[extension] = struct{}{}
 	}
-	return &Extensions{
+	extensions = &Extensions{
 		m: extensionMap,
-	}, nil
+	}
+	return extensions
 }
 
 func (extensions *Extensions) Has(ext string) bool {

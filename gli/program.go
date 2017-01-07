@@ -29,7 +29,51 @@ func (program *Program) Delete() {
 	gl.DeleteShader(program.fragId)
 }
 
-func NewProgram(vertexSource, fragmentSource string) (*Program, error) {
+type programOption struct {
+	arbGeometryShader4 struct {
+		use bool
+		source string
+		inType GeometryInputType
+		outType GeometryOutputType
+		numOutputVertices int
+	}
+}
+
+type GeometryInputType uint32
+
+const (
+	GEOM_IN_POINTS GeometryInputType = gl.POINTS
+	GEOM_IN_LINES GeometryInputType = gl.LINES
+	GEOM_IN_LINES_ADJACENCY GeometryInputType = gl.LINES_ADJACENCY_ARB
+	GEOM_IN_TRIANGLES GeometryInputType = gl.TRIANGLES
+	GEOM_IN_TRIANGLES_ADJACENCY GeometryInputType = gl.TRIANGLES_ADJACENCY_ARB
+)
+
+type GeometryOutputType uint32
+
+const (
+	GEOM_OUT_POINTS GeometryOutputType = gl.POINTS
+	GEOM_OUT_LINE_STRIP GeometryOutputType = gl.LINE_STRIP
+	GEOM_OUT_TRIANGLE_STRIP GeometryOutputType = gl.TRIANGLE_STRIP
+)
+
+type ProgramOption func(opt *programOption)
+
+func ProgramArbGeometryShader4(source string, inType GeometryInputType, outType GeometryOutputType, numOutputVertices int) ProgramOption {
+	return func(opt *programOption) {
+		opt.arbGeometryShader4.use = true
+		opt.arbGeometryShader4.source = source
+		opt.arbGeometryShader4.inType = inType
+		opt.arbGeometryShader4.outType = outType
+		opt.arbGeometryShader4.numOutputVertices = numOutputVertices
+	}
+}
+
+func NewProgram(vertexSource, fragmentSource string, opts ...ProgramOption) (_ *Program, rerr error) {
+	opt := programOption{}
+	for _, o := range opts {
+		o(&opt)
+	}
 	vertexId, err := newShader(vertexSource, gl.VERTEX_SHADER)
 	if err != nil {
 		return nil, err
@@ -47,6 +91,34 @@ func NewProgram(vertexSource, fragmentSource string) (*Program, error) {
 	}
 	gl.AttachShader(id, vertexId)
 	gl.AttachShader(id, fragmentId)
+
+	var geomId uint32
+	if opt.arbGeometryShader4.use {
+		if !GetExtensions().Has("GL_ARB_geometry_shader4") {
+			gl.DeleteShader(vertexId)
+			gl.DeleteShader(fragmentId)
+			gl.DeleteProgram(id)
+			return nil, errors.New("GL_ARB_geometry_shader4 requested, but extension is not available")
+		}
+		geomId, err = newShader(opt.arbGeometryShader4.source, gl.GEOMETRY_SHADER_ARB)
+		if err != nil {
+			gl.DeleteShader(vertexId)
+			gl.DeleteShader(fragmentId)
+			gl.DeleteProgram(id)
+			return nil, err
+		}
+		defer func() {
+			if rerr != nil {
+				fmt.Printf("deleted geometry shader\n")
+				gl.DeleteShader(geomId)
+			}
+		}()
+		gl.AttachShader(id, geomId)
+		gl.ProgramParameteriARB(id, gl.GEOMETRY_INPUT_TYPE_ARB, int32(opt.arbGeometryShader4.inType))
+		gl.ProgramParameteriARB(id, gl.GEOMETRY_OUTPUT_TYPE_ARB, int32(opt.arbGeometryShader4.outType))
+		gl.ProgramParameteriARB(id, gl.GEOMETRY_VERTICES_OUT_ARB, int32(opt.arbGeometryShader4.numOutputVertices))
+	}
+
 	gl.LinkProgram(id)
 	var result int32
 	gl.GetProgramiv(id, gl.LINK_STATUS, &result)
