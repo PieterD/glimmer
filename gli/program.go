@@ -94,7 +94,7 @@ func NewProgram(vertexSource, fragmentSource string, opts ...ProgramOption) (_ *
 
 	var geomId uint32
 	if opt.arbGeometryShader4.use {
-		if !GetExtensions().Has("GL_ARB_geometry_shader4") {
+		if !GetExtensions().GL_ARB_geometry_shader4() {
 			gl.DeleteShader(vertexId)
 			gl.DeleteShader(fragmentId)
 			gl.DeleteProgram(id)

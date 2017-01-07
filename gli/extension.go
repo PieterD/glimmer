@@ -37,3 +37,7 @@ func (extensions *Extensions) Has(ext string) bool {
 	_, ok := extensions.m[ext]
 	return ok
 }
+
+func (extensions *Extensions) GL_ARB_geometry_shader4() bool {
+	return extensions.Has("GL_ARB_geometry_shader4")
+}

@@ -16,6 +16,7 @@ func main() {
 
 	// Create shader program
 	program, err := gli.NewProgram(vSource, fSource,
+		// Geometry shader
 		gli.ProgramArbGeometryShader4(gSource, gli.GEOM_IN_TRIANGLES, gli.GEOM_OUT_TRIANGLE_STRIP, 6))
 	Panic(err)
 	defer program.Delete()
@@ -79,10 +80,11 @@ void main() {
 	}
 	EndPrimitive();
 
-	// Mirror triangle along the x axis
+	// Mirror triangle along the x and y axes
 	for(i=0; i<gl_VerticesIn; i++) {
 		vec4 pos = gl_PositionIn[i];
 		pos.x = -pos.x;
+		pos.y = -pos.y;
 		gl_Position = pos;
 		color = theColor[i];
 		EmitVertex();

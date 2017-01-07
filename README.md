@@ -43,3 +43,7 @@ The caps package concerns itself with Capabilities (see [glEnable](https://www.o
 - Keyboard interactivity
 - Rudimentary camera panning
 - Close on escape
+
+### [Geometry ARB](examples/geometry_arb4)
+- Extensions
+- Early, highly portable Geometry shader (GL_ARB_geometry_shader4)
