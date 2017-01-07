@@ -10,8 +10,6 @@ import (
 
 type Program struct {
 	id       uint32
-	vertId   uint32
-	fragId   uint32
 	uniforms map[string]Uniform
 }
 
@@ -25,8 +23,6 @@ func (program *Program) Use() {
 
 func (program *Program) Delete() {
 	gl.DeleteProgram(program.id)
-	gl.DeleteShader(program.vertId)
-	gl.DeleteShader(program.fragId)
 }
 
 type programOption struct {
@@ -74,45 +70,41 @@ func NewProgram(vertexSource, fragmentSource string, opts ...ProgramOption) (_ *
 	for _, o := range opts {
 		o(&opt)
 	}
+
+	id := gl.CreateProgram()
+	if id == 0 {
+		return nil, errors.New("Unable to allocate program")
+	}
+	defer func() {
+		if rerr != nil {
+			gl.DeleteProgram(id)
+		}
+	}()
+
 	vertexId, err := newShader(vertexSource, gl.VERTEX_SHADER)
 	if err != nil {
 		return nil, err
 	}
+	defer gl.DeleteShader(vertexId)
+	gl.AttachShader(id, vertexId)
+
 	fragmentId, err := newShader(fragmentSource, gl.FRAGMENT_SHADER)
 	if err != nil {
-		gl.DeleteShader(vertexId)
 		return nil, err
 	}
-	id := gl.CreateProgram()
-	if id == 0 {
-		gl.DeleteShader(vertexId)
-		gl.DeleteShader(fragmentId)
-		return nil, errors.New("Unable to allocate program")
-	}
-	gl.AttachShader(id, vertexId)
+	defer gl.DeleteShader(fragmentId)
 	gl.AttachShader(id, fragmentId)
 
 	var geomId uint32
 	if opt.arbGeometryShader4.use {
 		if !GetExtensions().GL_ARB_geometry_shader4() {
-			gl.DeleteShader(vertexId)
-			gl.DeleteShader(fragmentId)
-			gl.DeleteProgram(id)
 			return nil, errors.New("GL_ARB_geometry_shader4 requested, but extension is not available")
 		}
 		geomId, err = newShader(opt.arbGeometryShader4.source, gl.GEOMETRY_SHADER_ARB)
 		if err != nil {
-			gl.DeleteShader(vertexId)
-			gl.DeleteShader(fragmentId)
-			gl.DeleteProgram(id)
 			return nil, err
 		}
-		defer func() {
-			if rerr != nil {
-				fmt.Printf("deleted geometry shader\n")
-				gl.DeleteShader(geomId)
-			}
-		}()
+		defer gl.DeleteShader(geomId)
 		gl.AttachShader(id, geomId)
 		gl.ProgramParameteriARB(id, gl.GEOMETRY_INPUT_TYPE_ARB, int32(opt.arbGeometryShader4.inType))
 		gl.ProgramParameteriARB(id, gl.GEOMETRY_OUTPUT_TYPE_ARB, int32(opt.arbGeometryShader4.outType))
@@ -128,16 +120,11 @@ func NewProgram(vertexSource, fragmentSource string, opts ...ProgramOption) (_ *
 		log := make([]byte, loglength)
 		var length int32
 		gl.GetProgramInfoLog(id, loglength, &length, &log[0])
-		gl.DeleteShader(vertexId)
-		gl.DeleteShader(fragmentId)
-		gl.DeleteProgram(id)
 		return nil, fmt.Errorf("Unable to link program: %s", log[:length])
 	}
 
 	return &Program{
 		id:       id,
-		vertId:   vertexId,
-		fragId:   fragmentId,
 		uniforms: uniforms(id),
 	}, nil
 }
