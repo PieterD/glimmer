@@ -2,22 +2,27 @@ package caps
 
 import "github.com/go-gl/gl/v2.1/gl"
 
+// Capabilities related to Blending.
 type BlendCaps struct{}
 
 var Blend = BlendCaps{}
 
+// Enable blending.
 func (_ BlendCaps) Enable() {
 	gl.Enable(gl.BLEND)
 }
 
+// Disable blending.
 func (_ BlendCaps) Disable() {
 	gl.Disable(gl.BLEND)
 }
 
+// Set the blend function.
 func (_ BlendCaps) Func(sourceFactor, destinationFactor BlendFactor) {
 	gl.BlendFunc(uint32(sourceFactor), uint32(destinationFactor))
 }
 
+// The blend function to pass to Blend.Func.
 type BlendFactor uint32
 
 const (

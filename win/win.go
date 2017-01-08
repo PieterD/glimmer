@@ -132,7 +132,6 @@ func Size(width, height int) WindowOption {
 	}
 }
 
-
 // Provide the window title.
 func Title(title string) WindowOption {
 	return func(opt *windowOption) {
