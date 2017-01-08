@@ -3,7 +3,9 @@
 [![GoDoc](https://godoc.org/github.com/PieterD/glimmer?status.svg)](https://godoc.org/github.com/PieterD/glimmer)
 [![Go Report](https://goreportcard.com/badge/github.com/PieterD/glimmer)](https://goreportcard.com/report/github.com/PieterD/glimmer)
 
-Basic opengl utilities, mostly for personal use
+Basic opengl utilities, mostly for personal use.
+
+API Is not set in stone.
 
 ## Packages
 
@@ -44,6 +46,6 @@ The caps package concerns itself with Capabilities (see [glEnable](https://www.o
 - Rudimentary camera panning
 - Close on escape
 
-### [Geometry ARB](examples/geometry_arb4)
+### [Geometry Shader](examples/geometry_arb4)
 - Extensions
 - Early, highly portable Geometry shader (GL_ARB_geometry_shader4)
