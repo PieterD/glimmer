@@ -9,19 +9,15 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-/*
- * The Window type wraps up the GLFW Window.
- * Glimmer only supports one window at a time.
- */
+// The Window type wraps up the GLFW Window.
+// Glimmer only supports one window at a time.
 type Window struct {
 	w     *glfw.Window
 	close int32
 	poll  bool
 }
 
-/*
- * Create a new Window with the given options.
- */
+// Create a new Window with the given options.
 func New(opts ...WindowOption) (*Window, error) {
 	opt := windowOption{
 		resizable:    false,
@@ -66,28 +62,22 @@ func New(opts ...WindowOption) (*Window, error) {
 	}, nil
 }
 
-/*
- * Destroy the given window.
- *
- * This should be the very last Glimmer call you make.
- */
+// Destroy the given window.
+//
+// This should be the very last Glimmer call you make.
 func (window *Window) Destroy() {
 	window.w.Destroy()
 	glfw.Terminate()
 }
 
-/*
- * Mark the window for closing. After this, ShouldClose will return true.
- *
- * This may be called from any Goroutine.
- */
+// Mark the window for closing. After this, ShouldClose will return true.
+//
+// This may be called from any Goroutine.
 func (window *Window) Close() {
 	atomic.StoreInt32(&window.close, 1)
 }
 
-/*
- * Return true if Window.Close was called, or if the window was closed by the user.
- */
+// Return true if Window.Close was called, or if the window was closed by the user.
 func (window *Window) ShouldClose() bool {
 	if atomic.LoadInt32(&window.close) == 1 {
 		return true
@@ -95,27 +85,21 @@ func (window *Window) ShouldClose() bool {
 	return window.w.ShouldClose()
 }
 
-/*
- * Return the GLFW 3.2 Window handle.
- */
+// Return the GLFW 3.2 Window handle.
 func (window *Window) Glfw() *glfw.Window {
 	return window.w
 }
 
-/*
- * Post an empty event in the GLFW event queue, waking up Window.Swap as fast as it can.
- * You may have to wait for the vsync.
- * It does nothing if the Poll option was provided at Window creation.
- *
- * This may be called from any Goroutine.
- */
+// Post an empty event in the GLFW event queue, waking up Window.Swap as fast as it can.
+// You may have to wait for the vsync.
+// It does nothing if the Poll option was provided at Window creation.
+//
+// This may be called from any Goroutine.
 func (window *Window) WakeUp() {
 	glfw.PostEmptyEvent()
 }
 
-/*
- * Swap the front and back buffers, and pump the event queue.
- */
+// Swap the front and back buffers, and pump the event queue.
 func (window *Window) Swap() {
 	window.w.SwapBuffers()
 	if window.poll {
@@ -135,16 +119,12 @@ type windowOption struct {
 	poll         bool
 }
 
-/*
- * Options for Window creation.
- */
+// Options for Window creation.
 type WindowOption func(opt *windowOption)
 
-/*
- * Provide the window size in pixels.
- *
- * Default: 800x600
- */
+// Provide the window size in pixels.
+//
+// Default: 800x600
 func Size(width, height int) WindowOption {
 	return func(opt *windowOption) {
 		opt.width = width
@@ -152,29 +132,24 @@ func Size(width, height int) WindowOption {
 	}
 }
 
-/*
- * Provide the window title.
- */
+
+// Provide the window title.
 func Title(title string) WindowOption {
 	return func(opt *windowOption) {
 		opt.title = title
 	}
 }
 
-/*
- * Make the window resizable.
- */
+// Make the window resizable.
 func Resizable() WindowOption {
 	return func(opt *windowOption) {
 		opt.resizable = true
 	}
 }
 
-/*
- * Set the minimum OpenGL context version.
- *
- * Default: 2.0
- */
+// Set the minimum OpenGL context version.
+//
+// Default: 2.0
 func Version(major, minor int) WindowOption {
 	return func(opt *windowOption) {
 		opt.majorVersion = major
@@ -182,12 +157,10 @@ func Version(major, minor int) WindowOption {
 	}
 }
 
-/*
- * Set the window to poll for events, instead of waiting.
- *
- * By default, Window.Swap will block after swapping the front and back buffers, waiting for events.
- * With this, Window.Swap will pump all waiting events, and then return immediately without waiting.
- */
+// Set the window to poll for events, instead of waiting.
+//
+// By default, Window.Swap will block after swapping the front and back buffers, waiting for events.
+// With this, Window.Swap will pump all waiting events, and then return immediately without waiting.
 func Poll() WindowOption {
 	return func(opt *windowOption) {
 		opt.poll = true
