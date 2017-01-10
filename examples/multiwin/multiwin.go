@@ -2,15 +2,9 @@ package main
 
 import (
 	"fmt"
-	"runtime"
+
+	. "github.com/PieterD/pan"
 )
-
-// Thread safety in GLFW:
-// http://www.glfw.org/docs/latest/intro_guide.html
-
-func init() {
-	runtime.LockOSThread()
-}
 
 func main() {
 	err := Start(
@@ -18,9 +12,7 @@ func main() {
 		Version(2, 0),
 		Title("Main window"),
 		Func(run1))
-	if err != nil {
-		fmt.Printf("Final error: %v\n", err)
-	}
+	Panic(err)
 }
 
 func run1(w *Window) {

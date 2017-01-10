@@ -28,13 +28,13 @@ func (w *Window) Events() <-chan interface{} {
 
 func (w *Window) Destroy() {
 	close(w.closing)
-	<- w.closed
+	<-w.closed
 }
 
 func (w *Window) initialize() {
 	w.closing = make(chan struct{})
 	w.closed = make(chan struct{})
-	w.pev = make(chan interface{}, 100)
+	w.pev = make(chan interface{}, 1000)
 	w.ev = make(chan interface{})
 	go func() {
 		in := w.pev

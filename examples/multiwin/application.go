@@ -11,8 +11,8 @@ import (
 var mainApp *application
 
 type application struct {
-	started      chan struct{}
-	eventChan    chan interface{}
+	started   chan struct{}
+	eventChan chan interface{}
 
 	id      uint64
 	windows map[*Window]struct{}
@@ -20,15 +20,14 @@ type application struct {
 
 func newApplication() *application {
 	return &application{
-		started:      make(chan struct{}),
-		eventChan:    make(chan interface{}, 1),
-		id:           1,
-		windows:      make(map[*Window]struct{}),
+		started:   make(chan struct{}),
+		eventChan: make(chan interface{}, 1),
+		id:        1,
+		windows:   make(map[*Window]struct{}),
 	}
 }
 
 func (app *application) loop() {
-	fmt.Printf("ML: Init")
 	err := glfw.Init()
 	Panic(err)
 	defer glfw.Terminate()
@@ -45,22 +44,17 @@ func (app *application) mainLoop() {
 	started := false
 
 	for !started || len(app.windows) > 0 {
-		fmt.Printf("ML: WaitEvents()\n")
 		glfw.WaitEvents()
-		fmt.Printf("ML: <-eventChan\n")
 		select {
 		case ie := <-app.eventChan:
 			switch e := ie.(type) {
 			case appEventNewWindow:
 				started = true
-				fmt.Printf("ML: newWindow\n")
 				w, err := app.loopNewWindow(e.opt)
 				e.ret <- appEventNewWindowReturn{w: w, err: err}
 			case appEventDestroyWindow:
-				fmt.Printf("ML: destroyWindow\n")
 				app.loopDestroyWindow(e)
 			case appEventDestroyApplication:
-				fmt.Printf("ML: destroyApplication\n")
 				return
 			}
 		default:
@@ -70,16 +64,13 @@ func (app *application) mainLoop() {
 
 func (app *application) closeLoop() {
 	for len(app.windows) > 0 {
-		fmt.Printf("CL: PollEvents()\n")
 		glfw.PollEvents()
-		fmt.Printf("CL: <-eventChan\n")
 		select {
 		case ie := <-app.eventChan:
 			switch e := ie.(type) {
 			case appEventNewWindow:
 				e.ret <- appEventNewWindowReturn{err: errors.New("Not creating new window: Application is closing")}
 			case appEventDestroyWindow:
-				fmt.Printf("ML: destroyWindow\n")
 				app.loopDestroyWindow(e)
 			}
 		default:
