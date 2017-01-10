@@ -75,8 +75,13 @@ func (w *Window) initialize() {
 		w.ev <- EventClose{}
 	})
 
-	w.gw.SetKeyCallback(func(gw *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
-
+	w.gw.SetKeyCallback(func(gw *glfw.Window, key glfw.Key, scanCode int, action glfw.Action, mod glfw.ModifierKey) {
+		w.ev <- EventKey{
+			Key: Key(key),
+			ScanCode: scanCode,
+			Action: Action(action),
+			Mod: Mod(mod),
+		}
 	})
 
 	w.gw.SetCharCallback(func(gw *glfw.Window, key rune) {
@@ -92,7 +97,11 @@ func (w *Window) initialize() {
 		}
 	})
 
-	w.gw.SetMouseButtonCallback(func(gw *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
-
+	w.gw.SetMouseButtonCallback(func(gw *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
+		w.ev <- EventMouseButton{
+			Button: Button(button),
+			Action: Action(action),
+			Mod: Mod(mod),
+		}
 	})
 }

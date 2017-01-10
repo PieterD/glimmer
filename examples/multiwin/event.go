@@ -29,6 +29,19 @@ type EventMousePos struct {
 	X, Y int
 }
 
+type EventMouseButton struct {
+	Button Button
+	Action Action
+	Mod    Mod
+}
+
+type EventKey struct {
+	Key      Key
+	ScanCode int
+	Action   Action
+	Mod      Mod
+}
+
 type EventChar struct {
 	Char rune
 }
