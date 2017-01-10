@@ -2,12 +2,16 @@ package win
 
 import (
 	"fmt"
-
+	"runtime"
 	"sync/atomic"
 
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
+
+func init() {
+	runtime.LockOSThread()
+}
 
 // The Window type wraps up the GLFW Window.
 // Glimmer only supports one window at a time.
