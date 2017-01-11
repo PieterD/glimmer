@@ -1,4 +1,4 @@
-package main
+package win
 
 type appEventNewWindow struct {
 	opt windowOption

@@ -1,4 +1,4 @@
-package main
+package win
 
 import (
 	"runtime"
@@ -65,43 +65,43 @@ func (w *Window) initialize() {
 	}()
 
 	w.gw.SetSizeCallback(func(gw *glfw.Window, width, height int) {
-		w.ev <- EventResize{
+		w.pev <- EventResize{
 			Width:  width,
 			Height: height,
 		}
 	})
 
 	w.gw.SetCloseCallback(func(gw *glfw.Window) {
-		w.ev <- EventClose{}
+		w.pev <- EventClose{}
 	})
 
 	w.gw.SetKeyCallback(func(gw *glfw.Window, key glfw.Key, scanCode int, action glfw.Action, mod glfw.ModifierKey) {
-		w.ev <- EventKey{
-			Key: Key(key),
+		w.pev <- EventKey{
+			Key:      Key(key),
 			ScanCode: scanCode,
-			Action: Action(action),
-			Mod: Mod(mod),
+			Action:   Action(action),
+			Mod:      Mod(mod),
 		}
 	})
 
 	w.gw.SetCharCallback(func(gw *glfw.Window, key rune) {
-		w.ev <- EventChar{
+		w.pev <- EventChar{
 			Char: key,
 		}
 	})
 
 	w.gw.SetCursorPosCallback(func(gw *glfw.Window, x, y float64) {
-		w.ev <- EventMousePos{
+		w.pev <- EventMousePos{
 			X: int(x),
 			Y: int(y),
 		}
 	})
 
 	w.gw.SetMouseButtonCallback(func(gw *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
-		w.ev <- EventMouseButton{
+		w.pev <- EventMouseButton{
 			Button: Button(button),
 			Action: Action(action),
-			Mod: Mod(mod),
+			Mod:    Mod(mod),
 		}
 	})
 }

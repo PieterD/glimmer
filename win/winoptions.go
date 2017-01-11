@@ -1,4 +1,4 @@
-package main
+package win
 
 func applyWindowOptions(opts ...WindowOption) windowOption {
 	opt := windowOption{

@@ -4,6 +4,7 @@ import (
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
 	. "github.com/PieterD/pan"
+	"github.com/PieterD/crap/glimmer/win"
 )
 
 func main() {

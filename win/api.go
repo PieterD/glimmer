@@ -1,6 +1,9 @@
-package main
+package win
 
-import "runtime"
+import (
+	"runtime"
+	"github.com/go-gl/glfw/v3.2/glfw"
+)
 
 // Thread safety in GLFW:
 // http://www.glfw.org/docs/latest/intro_guide.html
@@ -52,4 +55,5 @@ func Start(opts ...WindowOption) error {
 // Terminate the application, closing all windows and the main loop.
 func Terminate() {
 	mainApp.eventChan <- appEventDestroyApplication{}
+	glfw.PostEmptyEvent()
 }
