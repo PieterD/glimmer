@@ -11,14 +11,13 @@ import (
 )
 
 func main() {
-	window, err := win.New(
+	Panic(win.Start(
 		win.Size(800, 600),
 		win.Title("Square"),
-		// Tell the window to Poll for events rather than wait
-		win.Poll())
-	Panic(err)
-	defer window.Destroy()
+		win.Func(myMain)))
+}
 
+func myMain(window *win.Window) {
 	program, err := gli.NewProgram(vSource, fSource)
 	Panic(err)
 	defer program.Delete()
@@ -60,14 +59,22 @@ func main() {
 
 	start := time.Now()
 
-	for !window.ShouldClose() {
-		// Pulse the square by setting a time-dependent uniform
-		scale := math.Sin(time.Since(start).Seconds())/2.0 + 0.5
-		alpha.SetFloat(float32(scale))
+	for {
+		ie := window.Poll()
+		if ie == nil {
+			// Pulse the square by setting a time-dependent uniform
+			scale := math.Sin(time.Since(start).Seconds())/2.0 + 0.5
+			alpha.SetFloat(float32(scale))
 
-		clear.Clear()
-		draw.Draw(0, 6)
-		window.Swap()
+			clear.Clear()
+			draw.Draw(0, 6)
+			window.Swap()
+			continue
+		}
+		switch ie.(type) {
+		case win.EventClose:
+			return
+		}
 	}
 }
 

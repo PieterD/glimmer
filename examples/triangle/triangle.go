@@ -4,17 +4,16 @@ import (
 	"github.com/PieterD/glimmer/gli"
 	"github.com/PieterD/glimmer/win"
 	. "github.com/PieterD/pan"
-	"github.com/PieterD/crap/glimmer/win"
 )
 
 func main() {
-	// Create window
-	window, err := win.New(
+	Panic(win.Start(
 		win.Size(800, 600),
-		win.Title("Triangle"))
-	Panic(err)
-	defer window.Destroy()
+		win.Title("Triangle"),
+		win.Func(myMain)))
+}
 
+func myMain(window *win.Window) {
 	// Create shader program
 	program, err := gli.NewProgram(vSource, fSource)
 	Panic(err)
@@ -43,10 +42,18 @@ func main() {
 	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
 	Panic(err)
 
-	for !window.ShouldClose() {
-		clear.Clear()
-		draw.Draw(0, 3)
-		window.Swap()
+	for {
+		ie := window.Poll()
+		if ie == nil {
+			clear.Clear()
+			draw.Draw(0, 3)
+			window.Swap()
+			continue
+		}
+		switch ie.(type) {
+		case win.EventClose:
+			return
+		}
 	}
 }
 

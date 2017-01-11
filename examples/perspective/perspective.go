@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/PieterD/glimmer/caps"
@@ -9,17 +8,16 @@ import (
 	"github.com/PieterD/glimmer/mat"
 	"github.com/PieterD/glimmer/win"
 	. "github.com/PieterD/pan"
-	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 func main() {
-	window, err := win.New(
+	Panic(win.Start(
 		win.Size(800, 600),
 		win.Title("Perspective"),
-		win.Poll())
-	Panic(err)
-	defer window.Destroy()
+		win.Func(myMain)))
+}
 
+func myMain(window *win.Window) {
 	program, err := gli.NewProgram(vSource, fSource)
 	Panic(err)
 	defer program.Delete()
@@ -56,32 +54,6 @@ func main() {
 	var x, y, xStep, yStep float64
 	x = 0.5
 	y = 0.5
-	window.Glfw().SetKeyCallback(func(w *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
-		switch action {
-		case glfw.Press:
-			fmt.Printf("press\n")
-			switch key {
-			case glfw.KeyLeft:
-				xStep = -0.1
-			case glfw.KeyRight:
-				xStep = 0.1
-			case glfw.KeyUp:
-				yStep = 0.1
-			case glfw.KeyDown:
-				yStep = -0.1
-			}
-		case glfw.Release:
-			fmt.Printf("release\n")
-			switch key {
-			case glfw.KeyLeft, glfw.KeyRight:
-				xStep = 0.0
-			case glfw.KeyUp, glfw.KeyDown:
-				yStep = 0.0
-			case glfw.KeyEscape:
-				window.Close()
-			}
-		}
-	})
 
 	caps.Cull.Enable()
 	caps.Cull.Face(false, true)
@@ -92,17 +64,46 @@ func main() {
 	//caps.Depth.Range(1.0, 3.0)
 
 	prev := time.Now()
-	for !window.ShouldClose() {
-		cur := time.Now()
-		diff := cur.Sub(prev)
-		x += xStep * diff.Seconds()
-		y += yStep * diff.Seconds()
-		prev = cur
-		offsetUniform.SetFloat(float32(x), float32(y))
+	for {
+		ie := window.Poll()
+		if ie == nil {
+			cur := time.Now()
+			diff := cur.Sub(prev)
+			x += xStep * diff.Seconds()
+			y += yStep * diff.Seconds()
+			prev = cur
+			offsetUniform.SetFloat(float32(x), float32(y))
 
-		clear.Clear()
-		draw.Draw(0, 36)
-		window.Swap()
+			clear.Clear()
+			draw.Draw(0, 36)
+			window.Swap()
+			continue
+		}
+		switch e := ie.(type) {
+		case win.EventKey:
+			switch e.Action {
+			case win.ActionPress:
+				switch e.Key {
+				case win.KeyLeft:
+					xStep = -0.1
+				case win.KeyRight:
+					xStep = 0.1
+				case win.KeyUp:
+					yStep = 0.1
+				case win.KeyDown:
+					yStep = -0.1
+				}
+			case win.ActionRelease:
+				switch e.Key {
+				case win.KeyLeft, win.KeyRight:
+					xStep = 0.0
+				case win.KeyUp, win.KeyDown:
+					yStep = 0.0
+				case win.KeyEscape:
+					return
+				}
+			}
+		}
 	}
 }
 

@@ -9,12 +9,13 @@ import (
 )
 
 func main() {
-	window, err := win.New(
+	Panic(win.Start(
 		win.Size(800, 600),
-		win.Title("Texture"))
-	Panic(err)
-	defer window.Destroy()
+		win.Title("Texture"),
+		win.Func(myMain)))
+}
 
+func myMain(window *win.Window) {
 	program, err := gli.NewProgram(vSource, fSource)
 	Panic(err)
 	defer program.Delete()
@@ -59,10 +60,18 @@ func main() {
 	clear, err := gli.NewClear(gli.ClearColor(0, 0, 0, 1))
 	Panic(err)
 
-	for !window.ShouldClose() {
-		clear.Clear()
-		draw.Draw(0, 6)
-		window.Swap()
+	for {
+		ie := window.Poll()
+		if ie == nil {
+			clear.Clear()
+			draw.Draw(0, 6)
+			window.Swap()
+			continue
+		}
+		switch ie.(type) {
+		case win.EventClose:
+			return
+		}
 	}
 }
 

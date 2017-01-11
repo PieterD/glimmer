@@ -1,8 +1,8 @@
 package win
 
 import (
-	"runtime"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"runtime"
 )
 
 // Thread safety in GLFW:
